@@ -25,7 +25,7 @@ namespace LC_API.ManualPatches
             __instance.lobbyHostSettings.lobbyName = "[MODDED]" + __instance.lobbyHostSettings.lobbyName.ToString();
             }
             Plugin.Log.LogMessage("server pre-setup success");
-            return (true);
+            return true;
         }
 
         internal static bool CacheMenuManager(MenuManager __instance)

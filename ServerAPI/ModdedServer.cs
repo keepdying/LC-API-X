@@ -35,6 +35,7 @@ namespace LC_API.ServerAPI
         /// </summary>
         public static void OnSceneLoaded()
         {
+            Plugin.Log.LogMessage("OnSceneLoaded() called");
         }
     }
 }
