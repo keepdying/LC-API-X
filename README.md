@@ -1,6 +1,6 @@
 # LC-API-X
 
-LC API but mod checks are configurable. 
+LC API but mod checks are configurable.
 
 ## Why?
 
