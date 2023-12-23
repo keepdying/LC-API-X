@@ -1,4 +1,5 @@
-﻿using LC_API.Comp;
+﻿using BepInEx.Configuration;
+using LC_API.Comp;
 using LC_API.Data;
 using LC_API.Extensions;
 using LC_API.ServerAPI;
@@ -13,13 +14,16 @@ namespace LC_API.ManualPatches
 {
     internal static class ServerPatch
     {
+        internal static ConfigEntry<bool> enableModdedLobbyName;
         internal static bool OnLobbyCreate(GameNetworkManager __instance, Result result, Lobby lobby)
         {
             if (result != Result.OK)
             {
                 Debug.LogError(string.Format("Lobby could not be created! {0}", result), __instance);
             }
+            if (enableModdedLobbyName.Value) {
             __instance.lobbyHostSettings.lobbyName = "[MODDED]" + __instance.lobbyHostSettings.lobbyName.ToString();
+            }
             Plugin.Log.LogMessage("server pre-setup success");
             return (true);
         }

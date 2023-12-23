@@ -43,6 +43,7 @@ namespace LC_API
             configDisableBundleLoader = Config.Bind("General", "Disable BundleLoader", false, "Should the BundleLoader be turned off? Enable this if you are having problems with mods that load assets using a different method from LC_API's BundleLoader.");
             CheatDatabase.hideModList = Config.Bind("LC_API_X", "Hide mod list", true, "Disables sending mod list to other players via LC_API_X");
             CheatDatabase.customModList = Config.Bind("LC_API_X", "Fake mod list", new List<string>(), "A list of mods to pretend you have installed. This is useful for faking mod list for paranoid server owners. Default sends original mod list.");
+            ServerPatch.enableModdedLobbyName = Config.Bind("LC_API_X", "Enable modded lobby name", false, "Should the modded lobby name be enabled? This will add [MODDED] to the start of the lobby name.");
             CommandHandler.commandPrefix = Config.Bind("General", "Prefix", "/", "Command prefix");
 
             Log = Logger;

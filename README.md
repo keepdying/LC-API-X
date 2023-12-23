@@ -1,30 +1,25 @@
-# LC-API
-The definitive Lethal Company modding API. Includes some very useful features to make modding life easier.
+# LC-API-X
 
-# Installation
-First, install BepInEx 5 into your game
-(https://github.com/BepInEx/BepInEx)
+LC API but mod checks are configurable. 
 
-Then, get the latest release off of thunderstore 
-(https://thunderstore.io/c/lethal-company/p/2018/LC_API/)
+## Why?
 
-# For Developers
-If you want to use the API in your plugin, add the LC_API.dll as a project reference!
+I don't want to broadcast my mods publicly.
 
-## Contributing
-If you wish to contribute to this project, you will need [unity netcode weaver](https://github.com/EvaisaDev/UnityNetcodeWeaver/releases) to make custom networking properly. Unzip it anywhere on your computer and open the solution properties, go to build events and change the `cd D:\NetcodePatcher` to the location of the netcode patcher on your machine. The folder you have should have `NetcodePatcher.dll` inside of it.
+## Features
 
-Also ensure your Assembly CSharp is set `Publicize="true"` in the .csproj file to ensure it gets publicized.
+- Hide/Show mod list to other players
+- Custom mod list (useful for faking mod list for paranoid server owners)
+- Enable/Disable modded lobby name
 
-Once you have these done, you will be able to properly build the solution.
+## Configs
 
-# Features
-AssetBundle loading - Put asset bundles in BepInEx > Bundles and load them using BundleAPI.BundleLoader.GetLoadedAsset
+```csharp
+Config.Bind("LC_API_X", "Hide mod list", true, "Disables sending mod list to other players via LC_API_X");
+Config.Bind("LC_API_X", "Fake mod list", new List<string>(), "A list of mods to pretend you have installed. This is useful for faking mod list for paranoid server owners. Default sends original mod list.");
+Config.Bind("LC_API_X", "Enable modded lobby name", false, "Should the modded lobby name be enabled? This will add [MODDED] to the start of the lobby name.");
+```
 
-ServerAPI - Utilities relating to the network and server. This includes:
+## Installation
 
-ModdedServer - Automatically alerts other users when you host a server that your server is modded. 
-It also lets mod authors make their mods put users in special matchmaking where they can only play with other modded users
-
-Networking - Easily send data across the network to sync data between clients
-
+Drop the DLL into BepInEx/plugins
