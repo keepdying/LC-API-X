@@ -15,7 +15,7 @@ namespace LC_API
         const string SIG_SEND_MODS = "LC_APISendMods";
 
         internal static ConfigEntry<bool> hideModList;
-        internal static ConfigEntry<List<string>> customModList;
+        internal static ConfigEntry<string> customModList;
         private static Dictionary<string, PluginInfo> PluginsLoaded = new Dictionary<string, PluginInfo>();
 
         public static void RunLocalCheatDetector()
@@ -40,7 +40,7 @@ namespace LC_API
                {
                     string mods = "";
                     Plugin.Log.LogWarning("Someone asked for my mod list, so I'm sending it.");
-                    if (customModList.Value.Count == 0)
+                    if (customModList.Value == "")
                     {   
                         Plugin.Log.LogWarning("Sending real mod list.");
                         foreach (PluginInfo info in PluginsLoaded.Values)
@@ -49,11 +49,8 @@ namespace LC_API
                         }
                     }
                     else {
-                        Plugin.Log.LogWarning("Sending custom mod list.");
-                        foreach (string mod in customModList.Value)
-                        {
-                            mods += "\n" + mod;
-                        }
+                        Plugin.Log.LogWarning("Sending custom mod.");
+                        mods += "\n" + customModList.Value;
                     }
                     Networking.Broadcast(GameNetworkManager.Instance.localPlayerController.playerUsername + " responded with these mods:" + mods, SIG_SEND_MODS);
                 } else {
