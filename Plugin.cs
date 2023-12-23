@@ -7,6 +7,7 @@ using LC_API.Comp;
 using LC_API.GameInterfaceAPI.Events;
 using LC_API.ManualPatches;
 using LC_API.ServerAPI;
+using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
@@ -32,26 +33,22 @@ namespace LC_API
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         internal static ManualLogSource Log;
 
-        private ConfigEntry<bool> configOverrideModServer;
         private ConfigEntry<bool> configLegacyAssetLoading;
         private ConfigEntry<bool> configDisableBundleLoader;
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         private void Awake()
         {
-            configOverrideModServer = Config.Bind("General", "Force modded server browser", false, "Should the API force you into the modded server browser?");
             configLegacyAssetLoading = Config.Bind("General", "Legacy asset bundle loading", false, "Should the BundleLoader use legacy asset loading? Turning this on may help with loading assets from older plugins.");
             configDisableBundleLoader = Config.Bind("General", "Disable BundleLoader", false, "Should the BundleLoader be turned off? Enable this if you are having problems with mods that load assets using a different method from LC_API's BundleLoader.");
+            CheatDatabase.hideModList = Config.Bind("LC_API_X", "Hide mod list", true, "Disables sending mod list to other players via LC_API_X");
+            CheatDatabase.customModList = Config.Bind("LC_API_X", "Fake mod list", new List<string>(), "A list of mods to pretend you have installed. This is useful for faking mod list for paranoid server owners. Default sends original mod list.");
             CommandHandler.commandPrefix = Config.Bind("General", "Prefix", "/", "Command prefix");
 
             Log = Logger;
             // Plugin startup logic
             Logger.LogWarning("\n.____    _________           _____  __________ .___  \r\n|    |   \\_   ___ \\         /  _  \\ \\______   \\|   | \r\n|    |   /    \\  \\/        /  /_\\  \\ |     ___/|   | \r\n|    |___\\     \\____      /    |    \\|    |    |   | \r\n|_______ \\\\______  /______\\____|__  /|____|    |___| \r\n        \\/       \\//_____/        \\/                 \r\n                                                     ");
-            Logger.LogInfo($"LC_API Starting up..");
-            if (configOverrideModServer.Value)
-            {
-                ModdedServer.SetServerModdedOnly();
-            }
+            Logger.LogInfo($"LC_API_X Starting up..");
 
             Harmony harmony = new Harmony("ModAPI");
             MethodInfo originalLobbyCreated = AccessTools.Method(typeof(GameNetworkManager), "SteamMatchmaking_OnLobbyCreated");
@@ -110,8 +107,7 @@ namespace LC_API
                 GameObject gameObject = new GameObject("API");
                 DontDestroyOnLoad(gameObject);
                 gameObject.AddComponent<LC_APIManager>();
-                Logger.LogInfo($"LC_API Started!");
-                CheatDatabase.RunLocalCheatDetector();
+                Logger.LogInfo($"LC_API_X Started!");
             }
         }
 

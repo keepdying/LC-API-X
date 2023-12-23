@@ -1,5 +1,7 @@
 ﻿using BepInEx;
 using BepInEx.Bootstrap;
+using BepInEx.Configuration;
+using BepInEx.Logging;
 using LC_API.GameInterfaceAPI;
 using LC_API.ServerAPI;
 using System.Collections.Generic;
@@ -12,25 +14,13 @@ namespace LC_API
         const string SIG_REQ_GUID = "LC_API_ReqGUID";
         const string SIG_SEND_MODS = "LC_APISendMods";
 
+        internal static ConfigEntry<bool> hideModList;
+        internal static ConfigEntry<List<string>> customModList;
         private static Dictionary<string, PluginInfo> PluginsLoaded = new Dictionary<string, PluginInfo>();
 
         public static void RunLocalCheatDetector()
         {
-            PluginsLoaded = Chainloader.PluginInfos;
-
-            foreach (PluginInfo info in PluginsLoaded.Values)
-            {
-                switch (info.Metadata.GUID)
-                {
-                    case "mikes.lethalcompany.mikestweaks":
-                    case "mom.llama.enhancer":
-                    case "Posiedon.GameMaster":
-                    case "LethalCompanyScalingMaster":
-                    case "verity.amberalert":
-                        ServerAPI.ModdedServer.SetServerModdedOnly();
-                        break;
-                }
-            }
+            Plugin.Log.LogInfo("Some plugin is called RunLocalCheatDetector() method, Ignoring...");
 
         }
 
@@ -46,12 +36,29 @@ namespace LC_API
         {
             if (data == DAT_CD_BROADCAST && signature == SIG_REQ_GUID)
             {
-                string mods = "";
-                foreach (PluginInfo info in PluginsLoaded.Values)
-                {
-                    mods += "\n" + info.Metadata.GUID;
+                if (!hideModList.Value)
+               {
+                    string mods = "";
+                    Plugin.Log.LogWarning("Someone asked for my mod list, so I'm sending it.");
+                    if (customModList.Value.Count == 0)
+                    {   
+                        Plugin.Log.LogWarning("Sending real mod list.");
+                        foreach (PluginInfo info in PluginsLoaded.Values)
+                        {
+                            mods += "\n" + info.Metadata.Name + " " + info.Metadata.Version;
+                        }
+                    }
+                    else {
+                        Plugin.Log.LogWarning("Sending custom mod list.");
+                        foreach (string mod in customModList.Value)
+                        {
+                            mods += "\n" + mod;
+                        }
+                    }
+                    Networking.Broadcast(GameNetworkManager.Instance.localPlayerController.playerUsername + " responded with these mods:" + mods, SIG_SEND_MODS);
+                } else {
+                    Plugin.Log.LogWarning("Someone asked for my mod list, but I'm hiding it.");
                 }
-                Networking.Broadcast(GameNetworkManager.Instance.localPlayerController.playerUsername + " responded with these mods:" + mods, SIG_SEND_MODS);
             }
 
             if (signature == SIG_SEND_MODS)
