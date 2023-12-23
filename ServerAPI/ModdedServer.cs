@@ -27,8 +27,7 @@ namespace LC_API.ServerAPI
         /// </summary>
         public static void SetServerModdedOnly()
         {
-            moddedOnly = true;
-            Plugin.Log.LogMessage("A plugin has set your game to only allow you to play with other people who have mods!");
+            Plugin.Log.LogMessage("A plugin has tried to set your game to only modded lobbies");
         }
 
         /// <summary>
@@ -36,11 +35,6 @@ namespace LC_API.ServerAPI
         /// </summary>
         public static void OnSceneLoaded()
         {
-            if (GameNetworkManager.Instance && ModdedOnly)
-            {
-                GameNetworkManager.Instance.gameVersionNum += 16440;
-                setModdedOnly = true;
-            }
         }
     }
 }

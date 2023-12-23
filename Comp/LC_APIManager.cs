@@ -22,20 +22,6 @@ namespace LC_API.Comp
                     Networking.Broadcast("testerData", "testerSignature");
                 }
             }
-            if (!ModdedServer.setModdedOnly)
-            {
-                ModdedServer.OnSceneLoaded();
-            }
-            else if (ModdedServer.ModdedOnly)
-            {
-                if (MenuManager != null)
-                {
-                    if (MenuManager.versionNumberText)
-                    {
-                        MenuManager.versionNumberText.text = $"v{GameNetworkManager.Instance.gameVersionNum - 16440}\nMOD";
-                    }
-                }
-            }
 
             if (GameNetworkManager.Instance != null)
             {
